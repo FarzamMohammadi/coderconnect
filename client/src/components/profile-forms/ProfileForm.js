@@ -1,8 +1,10 @@
 import React, { Fragment, useState } from 'react';
+import { Link, useMatch, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { createProfile } from '../../actions/profile';
 
-const CreateProfile = (props) => {
+const ProfileForm = ({ createProfile }) => {
   const [formData, setFormData] = useState({
     company: '',
     website: '',
@@ -33,11 +35,16 @@ const CreateProfile = (props) => {
     instagram,
   } = formData;
 
+  const navigate = useNavigate();
   const [displaySocialInputs, toggleSocialInputs] = useState(false);
 
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
+  const onSubmit = (e) => {
+    e.preventDefault();
+    createProfile(formData, navigate);
+  };
   return (
     <Fragment>
       <section className='container'>
@@ -47,7 +54,7 @@ const CreateProfile = (props) => {
           your profile stand out
         </p>
         <small>* = required field</small>
-        <form className='form'>
+        <form className='form' onSubmit={(e) => onSubmit(e)}>
           <div className='form-group'>
             <select name='status' value={status} onChange={(e) => onChange(e)}>
               <option value='0'>* Select Professional Status</option>
@@ -215,6 +222,8 @@ const CreateProfile = (props) => {
   );
 };
 
-CreateProfile.propTypes = {};
+ProfileForm.propTypes = {
+  createProfile: PropTypes.func.isRequired,
+};
 
-export default connect()(CreateProfile);
+export default connect(null, { createProfile })(ProfileForm);
