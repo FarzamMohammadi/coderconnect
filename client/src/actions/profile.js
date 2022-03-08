@@ -6,6 +6,7 @@ import {
   CLEAR_PROFILE,
   UPDATE_PROFILE,
   GET_PROFILES,
+  ACCOUNT_DELETED,
 } from './types';
 
 // Get current user's profile
@@ -39,10 +40,13 @@ export const getProfiles = () => async (dispatch) => {
       type: GET_PROFILES,
       payload: res.data,
     });
-  } catch (err) {
+  } catch (error) {
     dispatch({
       type: PROFILE_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status },
+      payload: {
+        msg: error.response.statusText,
+        status: error.response.status,
+      },
     });
   }
 };
@@ -66,8 +70,8 @@ export const createProfile =
       if (!edit) {
         navigate('/dashboard');
       }
-    } catch (err) {
-      const errors = err.response.data.errors;
+    } catch (error) {
+      const errors = error.response.data.errors;
 
       if (errors) {
         errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
@@ -75,7 +79,10 @@ export const createProfile =
 
       dispatch({
         type: PROFILE_ERROR,
-        payload: { msg: err.response.statusText, status: err.response.status },
+        payload: {
+          msg: error.response.statusText,
+          status: error.response.status,
+        },
       });
     }
   };
@@ -92,8 +99,8 @@ export const addExperience = (formData, navigate) => async (dispatch) => {
 
     dispatch(setAlert('Experience Added', 'success'));
     navigate('/dashboard');
-  } catch (err) {
-    const errors = err.response.data.errors;
+  } catch (error) {
+    const errors = error.response.data.errors;
 
     if (errors) {
       errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
@@ -101,7 +108,10 @@ export const addExperience = (formData, navigate) => async (dispatch) => {
 
     dispatch({
       type: PROFILE_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status },
+      payload: {
+        msg: error.response.statusText,
+        status: error.response.status,
+      },
     });
   }
 };
@@ -118,8 +128,8 @@ export const addEducation = (formData, navigate) => async (dispatch) => {
 
     dispatch(setAlert('Education Added', 'success'));
     navigate('/dashboard');
-  } catch (err) {
-    const errors = err.response.data.errors;
+  } catch (error) {
+    const errors = error.response.data.errors;
 
     if (errors) {
       errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
@@ -127,7 +137,80 @@ export const addEducation = (formData, navigate) => async (dispatch) => {
 
     dispatch({
       type: PROFILE_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status },
+      payload: {
+        msg: error.response.statusText,
+        status: error.response.status,
+      },
     });
+  }
+};
+
+// Delete Experience
+export const deleteExperience = (id) => async (dispatch) => {
+  try {
+    const res = await axios.delete(`/api/profile/experience/${id}`);
+
+    dispatch({
+      type: UPDATE_PROFILE,
+      payload: res.data,
+    });
+
+    dispatch(setAlert('Experience Removed', 'success'));
+  } catch (error) {
+    dispatch({
+      type: PROFILE_ERROR,
+      payload: {
+        msg: error.response.statusText,
+        status: error.response.status,
+      },
+    });
+  }
+};
+
+// Delete Education
+export const deleteEducation = (id) => async (dispatch) => {
+  try {
+    const res = await axios.delete(`/api/profile/education/${id}`);
+
+    dispatch({
+      type: UPDATE_PROFILE,
+      payload: res.data,
+    });
+
+    dispatch(setAlert('Education Removed', 'success'));
+  } catch (error) {
+    dispatch({
+      type: PROFILE_ERROR,
+      payload: {
+        msg: error.response.statusText,
+        status: error.response.status,
+      },
+    });
+  }
+};
+
+// Delete account & profile
+export const deleteAccount = (id) => async (dispatch) => {
+  if (window.confirm('Are you sure? This CANNOT be undone!')) {
+    try {
+      const res = await axios.delete('/api/profile');
+
+      dispatch({
+        type: CLEAR_PROFILE,
+      });
+      dispatch({
+        type: ACCOUNT_DELETED,
+      });
+
+      dispatch(setAlert('Your account has been permanently deleted'));
+    } catch (error) {
+      dispatch({
+        type: PROFILE_ERROR,
+        payload: {
+          msg: error.response.statusText,
+          status: error.response.status,
+        },
+      });
+    }
   }
 };
