@@ -18,11 +18,11 @@ router.get('/me', auth, async (req, res) => {
       ['name', 'avatar']
     );
 
+    console.log(res.json);
     if (!profile) {
       return res.status(400).json({ msg: 'There is no profile for this user' });
-
-      res.json(profile);
     }
+    res.json(profile);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
@@ -147,12 +147,15 @@ router.get('/user/:user_id', async (req, res) => {
 // @access  Private
 router.delete('/', auth, async (req, res) => {
   try {
-    // @todo - remove user's posts
-
+    // Remove user posts
     // Remove profile
-    await Profile.findOneAndRemove({ user: req.user.id });
     // Remove user
-    await User.findOneAndRemove({ _id: req.user.id });
+    await Promise.all([
+      Post.deleteMany({ user: req.user.id }),
+      Profile.findOneAndRemove({ user: req.user.id }),
+      User.findOneAndRemove({ _id: req.user.id }),
+    ]);
+
     res.json({ msg: 'User deleted' });
   } catch (err) {
     console.error(err.message);
