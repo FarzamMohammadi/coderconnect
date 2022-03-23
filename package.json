@@ -1,5 +1,5 @@
 {
-  "name": "devconnector",
+  "name": "codersunite",
   "version": "1.0.0",
   "description": "Social network for developers",
   "main": "server.js",
@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/FarzamMohammadi/devconnector.git"
+    "url": "git+https://github.com/FarzamMohammadi/codersunite.git"
   },
   "author": "Farzam",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/FarzamMohammadi/devconnector/issues"
+    "url": "https://github.com/FarzamMohammadi/codersunite/issues"
   },
-  "homepage": "https://github.com/FarzamMohammadi/devconnector#readme",
+  "homepage": "https://github.com/FarzamMohammadi/codersunite#readme",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
     "@fortawesome/free-brands-svg-icons": "^5.15.4",
