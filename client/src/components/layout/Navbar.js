@@ -4,37 +4,32 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { logout } from '../../actions/auth';
 
-export const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
+const Navbar = ({ auth: { isAuthenticated }, logout }) => {
   const authLinks = (
     <ul>
-      <li>
-        <Link to='/'>
-          <i className='fas fa-home'></i> <span className='hide-sm'>Home</span>
-        </Link>
-      </li>
       <li>
         <Link to='/profiles'>Developers</Link>
       </li>
       <li>
+        <Link to='/posts'>Posts</Link>
+      </li>
+      <li>
         <Link to='/dashboard'>
-          <i className='fas fa-user'></i>{' '}
+          <i className='fas fa-user' />{' '}
           <span className='hide-sm'>Dashboard</span>
         </Link>
       </li>
       <li>
-        <Link to='#!' onClick={logout}>
-          <i className='fas fa-sign-out-alt'></i>{' '}
+        <a onClick={logout} href='#!'>
+          <i className='fas fa-sign-out-alt' />{' '}
           <span className='hide-sm'>Logout</span>
-        </Link>
+        </a>
       </li>
     </ul>
   );
 
   const guestLinks = (
     <ul>
-      <li>
-        <Link to='/'>Home</Link>
-      </li>
       <li>
         <Link to='/profiles'>Developers</Link>
       </li>
@@ -46,16 +41,15 @@ export const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
       </li>
     </ul>
   );
+
   return (
     <nav className='navbar bg-dark'>
       <h1>
-        <a href='/'>
-          <i className='fas fa-code'></i> DevConnector
-        </a>
+        <Link to='/'>
+          <i className='fas fa-code' /> DevConnector
+        </Link>
       </h1>
-      {!loading && (
-        <Fragment>{isAuthenticated ? authLinks : guestLinks} </Fragment>
-      )}
+      <Fragment>{isAuthenticated ? authLinks : guestLinks}</Fragment>
     </nav>
   );
 };
